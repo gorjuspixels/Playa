@@ -1,11 +1,11 @@
 var express = require('express');
 var app = express();
 
-app.set('views', __dirname + '/');
-app.set('view engine', 'html');
+var PORT = 3000;
 
 app.get('/', function(req, res){
-  res.render('index.html');
+  res.sendfile('views/index.html');
 });
 
-app.listen(3000);
+console.log("Listening on port " + PORT)
+app.listen(PORT)
