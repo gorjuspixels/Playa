@@ -1,5 +1,5 @@
 var SOUNDCLOUD_CLIENT = "8232a972fc27da0d122b41211218729f"
-var DOMAIN = "192.168.1.110:3000"
+var DOMAIN = "playa:3000"
 var socket = io.connect("http://" + DOMAIN)
 var myUserName
 
@@ -11,7 +11,7 @@ var tracks = [
 
 SC.initialize({
   client_id: SOUNDCLOUD_CLIENT,
-  redirect_uri: "http://127.0.0.1:3000/callback.html",
+  redirect_uri: "http://playa:3000/callback.html",
 });
 
 // SC.oEmbed(tracks[0], {auto_play: true}, function(oembed){
