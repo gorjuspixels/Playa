@@ -47,6 +47,16 @@ function streamTrack(trackID) {
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
 	playing = true
 	trackStreaming.pipe(speakersPipe);
+
+	getTrackInfo(trackID, function(body) {
+		io.sockets.emit('nowPlaying', { "title": body.title, "artist": body.user.username});
+	})
+}
+
+function getTrackInfo(trackID, callback) {
+	request("http://api.soundcloud.com/tracks/" + trackID + ".json?client_id=" + SOUNDCLOUD_CLIENT, function(err, res, body) {
+		callback(body)
+	})
 }
 
 io.sockets.on('connection', function (socket) {

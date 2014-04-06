@@ -53,6 +53,14 @@ socket.on('userLeft', function(msg) {
 	}, 800);
 })
 
+socket.on('nowPlaying', function(track) {
+	var p = "<p> Now playing " + track.title + " by " + track.artist + ".</p>"
+	$("#msgScreen").append(p)
+  $('#msgScreen').stop().animate({
+	  scrollTop: $("#msgScreen")[0].scrollHeight
+	}, 800);
+})
+
 
 $(function() {
 	$("#usernameInput").keyup(function (e) {
