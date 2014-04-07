@@ -65,6 +65,7 @@ socket.on('paused', function(track) {
 $(function() {
 	$("#usernameInput").keyup(function (e) {
     if (e.keyCode == 13) {
+    	$(this).blur();
       socket.emit('set username', $("#usernameInput").val());
     }
 	});
