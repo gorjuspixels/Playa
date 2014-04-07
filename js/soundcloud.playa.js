@@ -1,5 +1,5 @@
 var SOUNDCLOUD_CLIENT = "8232a972fc27da0d122b41211218729f"
-var DOMAIN = "localhost:3000"
+var DOMAIN = "playa:3000"
 var socket = io.connect("http://" + DOMAIN)
 var myUserName
 
