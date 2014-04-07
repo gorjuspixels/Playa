@@ -53,7 +53,7 @@ function streamTrack(trackID) {
 	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 		var track = tracks[i]
 		if (track.id == trackID) {
-			io.sockets.emit('nowPlaying', { "title": body.title, "artist": body.user.username});
+			io.sockets.emit('nowPlaying', { "title": track.title, "artist": track.user.username});
 			break;
 		}
 	}
