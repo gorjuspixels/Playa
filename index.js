@@ -4,7 +4,8 @@ var express = require('express')
 	, io = require('socket.io').listen(server)
 	, request = require('request')
 	, lame = require('lame')
-	, Speaker = require('speaker');
+	, Speaker = require('speaker')
+	, colors = require('colors');
 
 
 app.use("/", express.static(__dirname + '/'))
@@ -21,18 +22,19 @@ var speakersPipe = (new lame.Decoder()).on('format', function (format) {
 			    this.pipe(new Speaker(format));
 			  })
 
+var trackListHTML = ''
+var tracks = []
+
 app.get('/', function(req, res){
   res.sendfile('views/index.html')
 })
 
-// create a player instance from playlist
-var tracks = [
-	"https://soundcloud.com/arthyum/red-hot-chili-peppers",
-	"https://soundcloud.com/dualseize/suicide-doors",
-	"https://soundcloud.com/sikdope/faithless-insomnia-sikdope"
-]
+NUMBER_OF_TRACKS = 25
 
-
+console.log(("Retrieving data from RFID reader...").yellow)
+getRandomTracks(NUMBER_OF_TRACKS, function(){
+	console.log(("Successfully retrieved " + NUMBER_OF_TRACKS + " tracks!").green)
+})
 
 
 function streamTrack(trackID) {
@@ -46,17 +48,33 @@ function streamTrack(trackID) {
 
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
 	playing = true
-	trackStreaming.pipe(speakersPipe);
+	trackStreaming.pipe(speakersPipe)
 
-	getTrackInfo(trackID, function(body) {
-		body = JSON.parse(body)
-		io.sockets.emit('nowPlaying', { "title": body.title, "artist": body.user.username});
-	})
+	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
+		var track = tracks[i]
+		if (track.id == trackID) {
+			io.sockets.emit('nowPlaying', { "title": body.title, "artist": body.user.username});
+			break;
+		}
+	}
 }
 
 function getTrackInfo(trackID, callback) {
 	request("http://api.soundcloud.com/tracks/" + trackID + ".json?client_id=" + SOUNDCLOUD_CLIENT, function(err, res, body) {
-		callback(body)
+		callback(JSON.parse(body))
+	})
+}
+
+function getRandomTracks(n, callback) {
+
+	request("http://api.soundcloud.com/tracks.json?client_id=" + SOUNDCLOUD_CLIENT + "&limit=" + n, function(err, res, body) {
+
+			tracks = JSON.parse(body)
+			tracks.forEach(function(track) {
+				trackListHTML += '<a href="#" class="list-group-item" data-track-id="' + track.id + '">' + track.title + ' - by ' + track.user.username + '</a>'
+			})
+
+			callback()
 	})
 }
 
@@ -119,7 +137,7 @@ function userNameAvailable(sId, uName) {
   setTimeout(function() {
  
     console.log('Sending welcome msg to ' + uName + ' at ' + sId);
-    io.sockets.sockets[sId].emit('welcome', { "userName" : uName, "currentUsers": JSON.stringify(Object.keys(clients)) });
+    io.sockets.sockets[sId].emit('welcome', { "userName" : uName, "currentUsers": JSON.stringify(Object.keys(clients)), 'tracksHTML': trackListHTML });
  
   }, 500);
 }

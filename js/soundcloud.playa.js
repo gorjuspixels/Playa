@@ -29,12 +29,22 @@ socket.on('welcome', function(msg) {
 	var p = "<p class='alert alert-success'>Username " + msg.userName + " is available. You can begin using Playa.</p>"
   $("#msgScreen").append(p)
 
-  tracks.forEach(function(track) {
-		getSCURI(track, function(streamTrack) {
-			var trackListHTML = '<a href="#" class="list-group-item" data-track-id="' + streamTrack.id + '">' + streamTrack.title + '</a>'
-			$('#trackList').append(trackListHTML)
-		})
-	})
+ //  tracks.forEach(function(track) {
+	// 	getSCURI(track, function(streamTrack) {
+	// 		var trackListHTML = '<a href="#" class="list-group-item" data-track-id="' + streamTrack.id + '">' + streamTrack.title + '</a>'
+	// 		$('#trackList').append(trackListHTML)
+	// 	})
+	// })
+
+	// getRandomTracks(25, function(trackIDs) {
+	// 	trackIDs.forEach(function(id) {
+	// 		getTrackInfo(id, function(track) {
+				// var trackListHTML = '<a href="#" class="list-group-item" data-track-id="' + track.id + '">' + track.title + '</a>'
+				$('#trackList').append(msg.tracksHTML)
+	// 		})
+	// 	})
+		
+	// })
 });
 
 socket.on('userJoined', function(msg) {
@@ -85,6 +95,16 @@ $(function() {
 })
 
 
+function getTrackInfo(trackID, callback) {
+	$.ajax({
+		url: "http://api.soundcloud.com/tracks/" + trackID + ".json?client_id=" + SOUNDCLOUD_CLIENT,
+		success: function(track) {
+			callback(track) 
+		}
+	})
+}
+
+
 /**
  * curl -v 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/matas/hobnotropic&client_id=YOUR_CLIENT_ID'
  * Takes a SoundCloud URL and converts it into URI for streaming
@@ -94,7 +114,6 @@ function getSCURI(url, callback) {
 	$.ajax({
 		url: "http://api.soundcloud.com/resolve.json?url=" + url + "&client_id=" + SOUNDCLOUD_CLIENT,
 		success: function(track) {
-			console.log(track)
 			callback(track) 
 		}
 	})
