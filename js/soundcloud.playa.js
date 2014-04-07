@@ -44,7 +44,10 @@ socket.on('nowPlaying', function(track) {
 	  scrollTop: $("#msgScreen")[0].scrollHeight
 	}, 800);
 
-	$('a.list-group-item[data-track-id="' + track.trackID +'"]').addClass('active')
+  $('a.list-group-item[data-track-id="' + currentTrackID +'"]').removeClass('active')
+  
+  currentTrackID = track.trackID
+	$('a.list-group-item[data-track-id="' + currentTrackID +'"]').addClass('active')
 })
 
 socket.on('paused', function(track) {
@@ -109,8 +112,7 @@ function pause(){
 }
 
 function play(trackID){
-	currentTrackID = trackID;
-	socket.emit('streamTrack', currentTrackID);
+	socket.emit('streamTrack', trackID);
 }
 
 $(document).ready(function() {
