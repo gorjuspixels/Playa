@@ -49,7 +49,7 @@ function streamTrack(trackID) {
 	trackStreaming.pipe(speakersPipe);
 
 	getTrackInfo(trackID, function(body) {
-		console.log(body)
+		body = JSON.parse(body)
 		io.sockets.emit('nowPlaying', { "title": body.title, "artist": body.user.username});
 	})
 }
