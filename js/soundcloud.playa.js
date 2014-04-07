@@ -3,11 +3,6 @@ var DOMAIN = "playa:3000"
 var socket = io.connect("http://" + DOMAIN)
 var myUserName
 
-var tracks = [
-	"https://soundcloud.com/arthyum/red-hot-chili-peppers",
-	"https://soundcloud.com/dualseize/suicide-doors",
-	"https://soundcloud.com/sikdope/faithless-insomnia-sikdope"
-]
 
 SC.initialize({
   client_id: SOUNDCLOUD_CLIENT
@@ -48,6 +43,8 @@ socket.on('nowPlaying', function(track) {
   $('#msgScreen').stop().animate({
 	  scrollTop: $("#msgScreen")[0].scrollHeight
 	}, 800);
+
+	$('a.list-group-item[data-track-id="' + track.id +'"]').addClass('active')
 })
 
 socket.on('paused', function(track) {
