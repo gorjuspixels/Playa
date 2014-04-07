@@ -1,5 +1,5 @@
 var SOUNDCLOUD_CLIENT = "8232a972fc27da0d122b41211218729f"
-var DOMAIN = "playa:3000"
+var DOMAIN = "localhost:3000"
 var socket = io.connect("http://" + DOMAIN)
 var myUserName
 
@@ -54,7 +54,21 @@ socket.on('userLeft', function(msg) {
 })
 
 socket.on('nowPlaying', function(track) {
+	$('#play').empty()
+	$('#play').append('<i class="glyphicon glyphicon-pause">Pause</i>')
+
 	var p = "<p> Now playing " + track.title + " by " + track.artist + ".</p>"
+	$("#msgScreen").append(p)
+  $('#msgScreen').stop().animate({
+	  scrollTop: $("#msgScreen")[0].scrollHeight
+	}, 800);
+})
+
+socket.on('paused', function(track) {
+	$('#play').empty()
+	$('#play').append('<i class="glyphicon glyphicon-play">Play</i>')
+
+	var p = "<p>" + track.title + " by " + track.artist + " was paused.</p>"
 	$("#msgScreen").append(p)
   $('#msgScreen').stop().animate({
 	  scrollTop: $("#msgScreen")[0].scrollHeight
@@ -88,8 +102,7 @@ function getSCURI(url, callback) {
 }
 
 function pause(){
-
-
+	socket.emit('pause')
 }
 
 function play(trackID){
@@ -101,19 +114,20 @@ $(document).ready(function() {
 
 	$(document).on('click', '#trackList a', function() {
 		play($(this).data('track-id'))
+		playing = true
 	})
 
 
 	$('#play').click(function() {
 		if(playing){
-			pause();
-			playing = false;
+			pause()
+			playing = false
 
 		}else{
 			if (currentTrackID == 0) 
 				currentTrackID = $('#trackList a').data('track-id')
-			play(currentTrackID);
-			playing = true;
+			play(currentTrackID)
+			playing = true
 		}
 	})
 })

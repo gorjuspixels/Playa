@@ -92,6 +92,15 @@ io.sockets.on('connection', function (socket) {
   socket.on('streamTrack', function(trackID) {
   	streamTrack(trackID)
   })
+
+
+  socket.on('pause', function() {
+  	if (playing) {
+  		// trackStreaming.pause()
+  		speakersPipe.pause()
+  		playing = false
+  	}
+  })
 })
 
 function userJoined(uName) {
