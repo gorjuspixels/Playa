@@ -10,16 +10,8 @@ var tracks = [
 ]
 
 SC.initialize({
-  client_id: SOUNDCLOUD_CLIENT,
-  redirect_uri: "http://playa:3000/callback.html",
+  client_id: SOUNDCLOUD_CLIENT
 });
-
-// SC.oEmbed(tracks[0], {auto_play: true}, function(oembed){
-// 	$(function() {
-// 		$('body').prepend(oembed.html);
-// 	})
-// });
-
 
 var playing = false;
 var currentTrackID = 0;
@@ -28,23 +20,7 @@ var currentTrackID = 0;
 socket.on('welcome', function(msg) {
 	var p = "<p class='alert alert-success'>Username " + msg.userName + " is available. You can begin using Playa.</p>"
   $("#msgScreen").append(p)
-
- //  tracks.forEach(function(track) {
-	// 	getSCURI(track, function(streamTrack) {
-	// 		var trackListHTML = '<a href="#" class="list-group-item" data-track-id="' + streamTrack.id + '">' + streamTrack.title + '</a>'
-	// 		$('#trackList').append(trackListHTML)
-	// 	})
-	// })
-
-	// getRandomTracks(25, function(trackIDs) {
-	// 	trackIDs.forEach(function(id) {
-	// 		getTrackInfo(id, function(track) {
-				// var trackListHTML = '<a href="#" class="list-group-item" data-track-id="' + track.id + '">' + track.title + '</a>'
-				$('#trackList').append(msg.tracksHTML)
-	// 		})
-	// 	})
-		
-	// })
+	$('#trackList').append(msg.tracksHTML)
 });
 
 socket.on('userJoined', function(msg) {
