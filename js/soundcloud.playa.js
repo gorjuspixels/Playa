@@ -61,6 +61,16 @@ socket.on('paused', function(track) {
 	}, 800);
 })
 
+socket.on('error', function(error) {
+	if (error.userNameInUse) {
+		var p = "<p> Sorry that nickname is already taken!</p>"
+		$("#msgScreen").append(p)
+	  $('#msgScreen').stop().animate({
+		  scrollTop: $("#msgScreen")[0].scrollHeight
+		}, 800);
+	}
+})
+
 
 $(function() {
 	$("#usernameInput").keyup(function (e) {
