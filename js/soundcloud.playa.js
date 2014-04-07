@@ -44,7 +44,7 @@ socket.on('nowPlaying', function(track) {
 	  scrollTop: $("#msgScreen")[0].scrollHeight
 	}, 800);
 
-	$('a.list-group-item[data-track-id="' + track.id +'"]').addClass('active')
+	$('a.list-group-item[data-track-id="' + track.trackID +'"]').addClass('active')
 })
 
 socket.on('paused', function(track) {
