@@ -45,7 +45,7 @@ socket.on('nowPlaying', function(track) {
 	}, 800);
 
   $('a.list-group-item[data-track-id="' + currentTrackID +'"]').removeClass('active')
-  
+
   currentTrackID = track.trackID
 	$('a.list-group-item[data-track-id="' + currentTrackID +'"]').addClass('active')
 })
@@ -112,7 +112,11 @@ function pause(){
 }
 
 function play(trackID){
-	socket.emit('streamTrack', trackID);
+	socket.emit('streamTrack', trackID)
+}
+
+function resume() {
+	socket.emit('resume')
 }
 
 $(document).ready(function() {
@@ -131,7 +135,7 @@ $(document).ready(function() {
 		}else{
 			if (currentTrackID == 0) 
 				currentTrackID = $('#trackList a').data('track-id')
-			play(currentTrackID)
+			resume()
 			playing = true
 		}
 	})

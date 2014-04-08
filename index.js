@@ -59,7 +59,7 @@ function streamTrack(trackID) {
 			io.sockets.emit('nowPlaying', { "title": track.title, "artist": track.user.username, "trackID": track.id});
 			break;
 		}
-	}
+	}	
 }
 
 function getTrackInfo(trackID, callback) {
@@ -118,7 +118,15 @@ io.sockets.on('connection', function (socket) {
   socket.on('pause', function() {
   	if (playing) {
   		// trackStreaming.pause()
-  		speakersPipe.pause()
+  		speakersPipe.unpipe()
+  		playing = false
+  	}
+  })
+
+  socket.on('resume', function() {
+  	if (!playing) {
+  		// trackStreaming.pause()
+  		speakersPipe.pipe(lame)
   		playing = false
   	}
   })
