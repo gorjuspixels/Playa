@@ -18,13 +18,15 @@ var playing = false
 var clients = {}
 var socketsOfClients = {}
 var trackStreaming;
-var speakersPipe = (new lame.Decoder()).on('format', function (format) {
+
+var lame = new Lame.Decoder()
+var speakersPipe = lame.on('format', function (format) {
 			    this.pipe(new Speaker(format));
 			  })
 
 var trackListHTML = ''
 var tracks = []
-var lame = new Lame.Decoder()
+
 
 app.get('/', function(req, res){
   res.sendfile('views/index.html')
