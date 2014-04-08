@@ -80,6 +80,8 @@ function getRandomTracks(n, callback) {
 	})
 }
 
+io.set('log level', 1); // reduce logging
+
 io.sockets.on('connection', function (socket) {
 
   socket.on('set username', function(userName) {
