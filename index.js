@@ -51,6 +51,7 @@ function streamTrack(trackID) {
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
 	playing = true
 	trackStreaming.pipe(speakersPipe)
+	trackStreaming.resume()
 
 	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 		var track = tracks[i]
