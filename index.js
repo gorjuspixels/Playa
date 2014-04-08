@@ -18,6 +18,7 @@ var playing = false
 var clients = {}
 var socketsOfClients = {}
 var trackStreaming;
+var currentID;
 var speakersPipe = (new lame.Decoder()).on('format', function (format) {
 			    this.pipe(new Speaker(format));
 			  })
@@ -41,6 +42,8 @@ getRandomTracks(NUMBER_OF_TRACKS, function(){
 
 function streamTrack(trackID) {
 
+	currentID = trackID
+
 	if (playing) {
 		speakersPipe.unpipe()
 		speakersPipe = (new lame.Decoder()).on('format', function (format) {
@@ -48,14 +51,14 @@ function streamTrack(trackID) {
 			  })
 	}
 
-	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
+	trackStreaming = request("http://api.soundcloud.com/tracks/" + currentID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
 	playing = true
 	trackStreaming.pipe(speakersPipe)
 	trackStreaming.resume()
 
 	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 		var track = tracks[i]
-		if (track.id == trackID) {
+		if (track.id == currentID) {
 			io.sockets.emit('nowPlaying', { "title": track.title, "artist": track.user.username, "trackID": track.id});
 			break;
 		}
@@ -117,9 +120,16 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('pause', function() {
   	if (playing) {
-  		// trackStreaming.pause()
   		speakersPipe.unpipe()
   		playing = false
+
+  		for(var i=0; i<NUMBER_OF_TRACKS; i++) {
+				var track = tracks[i]
+				if (track.id == currentID) {
+					sockets.emit('paused', { "title": track.title, "artist": track.user.username});
+					break;
+				}
+			}
   	}
   })
 
