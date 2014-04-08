@@ -3,7 +3,7 @@ var express = require('express')
 	, server = require('http').createServer(app)
 	, io = require('socket.io').listen(server)
 	, request = require('request')
-	, lame = require('lame')
+	, Lame = require('lame')
 	, Speaker = require('speaker')
 	, colors = require('colors');
 
@@ -19,8 +19,10 @@ var clients = {}
 var socketsOfClients = {}
 var trackStreaming;
 var currentID;
-var speakersPipe = (new lame.Decoder()).on('format', function (format) {
-			    this.pipe(new Speaker(format));
+
+var lame = new Lame.Decoder()
+var speakersPipe = lame.on('format', function (format) {
+			    this.pipe(new Speaker(format))
 			  })
 
 var trackListHTML = ''
@@ -46,7 +48,8 @@ function streamTrack(trackID) {
 
 	if (playing) {
 		speakersPipe.unpipe()
-		speakersPipe = (new lame.Decoder()).on('format', function (format) {
+		lame = new Lame.Decoder()
+		speakersPipe = lame.on('format', function (format) {
 			    this.pipe(new Speaker(format));
 			  })
 	}
@@ -54,7 +57,6 @@ function streamTrack(trackID) {
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + currentID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
 	playing = true
 	trackStreaming.pipe(speakersPipe)
-	trackStreaming.resume()
 
 	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 		var track = tracks[i]
@@ -136,7 +138,9 @@ io.sockets.on('connection', function (socket) {
   socket.on('resume', function() {
   	if (!playing) {
   		// trackStreaming.pause()
-  		speakersPipe.pipe(lame)
+  		speakersPipe = lame.on('format', function (format) {
+			    this.pipe(new Speaker(format));
+			  })
   		playing = false
   	}
   })
