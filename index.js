@@ -41,7 +41,9 @@ function streamTrack(trackID) {
 
 	if (playing) {
 		speakersPipe.end()
-		speakersPipe = new Speaker()
+		speakersPipe = (new lame.Decoder()).on('format', function (format) {
+			    this.pipe(new Speaker(format));
+			  })
 	}
 
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
