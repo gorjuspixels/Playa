@@ -54,7 +54,7 @@ function streamTrack(trackID) {
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
 	playing = true
 	trackStreaming.pipe(speakersPipe)
-	trackStreaming.resume()
+	lame.resume()
 
 	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 		var track = tracks[i]
@@ -123,7 +123,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('pause', function() {
   	if (playing) {
   		// trackStreaming.pause()
-  		trackStreaming.pause()
+  		lame.pause()
   		playing = false
   	}
   })
