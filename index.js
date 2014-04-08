@@ -123,7 +123,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('pause', function() {
   	if (playing) {
   		// trackStreaming.pause()
-  		lame.pause()
+  		trackStreaming.pause()
   		playing = false
   	}
   })
