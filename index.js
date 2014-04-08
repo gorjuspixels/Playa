@@ -40,8 +40,8 @@ getRandomTracks(NUMBER_OF_TRACKS, function(){
 function streamTrack(trackID) {
 
 	if (playing) {
-		speakersPipe.end()
-		speakersPipe = (new lame.Decoder()).on('format', function (format) {
+		speakersPipe.unpipe()
+		speakersPipe = lame.on('format', function (format) {
 			    this.pipe(new Speaker(format));
 			  })
 	}
@@ -117,7 +117,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('pause', function() {
   	if (playing) {
   		// trackStreaming.pause()
-  		speakersPipe.pause()
+  		lame.pause()
   		playing = false
   	}
   })
