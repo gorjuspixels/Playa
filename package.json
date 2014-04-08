@@ -21,7 +21,8 @@
     "lame": "~1.0.3",
     "request": "~2.34.0",
     "socket.io": "~0.9.16",
-    "speaker": "~0.0.10"
+    "speaker": "~0.0.10",
+    "pause-stream": "~0.0.11"
   },
   "devDependencies": {}
 }

@@ -5,7 +5,8 @@ var express = require('express')
 	, request = require('request')
 	, lame = require('lame')
 	, Speaker = require('speaker')
-	, colors = require('colors');
+	, colors = require('colors')
+	, ps = require('pause-stream')();
 
 
 app.use("/", express.static(__dirname + '/'))
@@ -48,7 +49,8 @@ function streamTrack(trackID) {
 
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
 	playing = true
-	trackStreaming.pipe(speakersPipe)
+	ps.pipe(trackStreaming.pipe(speakersPipe))
+	ps.resume()
 
 	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 		var track = tracks[i]
@@ -115,7 +117,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('pause', function() {
   	if (playing) {
   		// trackStreaming.pause()
-  		speakersPipe.pause()
+  		ps.pause()
   		playing = false
   	}
   })
