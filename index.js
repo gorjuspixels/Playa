@@ -3,7 +3,7 @@ var express = require('express')
 	, server = require('http').createServer(app)
 	, io = require('socket.io').listen(server)
 	, request = require('request')
-	, lame = require('lame')
+	, Lame = require('lame')
 	, Speaker = require('speaker')
 	, colors = require('colors');
 
@@ -24,6 +24,7 @@ var speakersPipe = (new lame.Decoder()).on('format', function (format) {
 
 var trackListHTML = ''
 var tracks = []
+var lame = new Lame.Decoder()
 
 app.get('/', function(req, res){
   res.sendfile('views/index.html')
