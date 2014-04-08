@@ -44,6 +44,8 @@ function streamTrack(trackID) {
 
 	if (playing) {
 		speakersPipe.unpipe()
+		lame.unpipe()
+		lame = new Lame.Decoder()
 		speakersPipe = lame.on('format', function (format) {
 			    this.pipe(new Speaker(format));
 			  })
