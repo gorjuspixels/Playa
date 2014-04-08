@@ -40,7 +40,8 @@ getRandomTracks(NUMBER_OF_TRACKS, function(){
 function streamTrack(trackID) {
 
 	if (playing) {
-		speakersPipe.flush()
+		speakersPipe.end()
+		speakersPipe = new Speaker()
 	}
 
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
