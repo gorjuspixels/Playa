@@ -5,8 +5,7 @@ var express = require('express')
 	, request = require('request')
 	, lame = require('lame')
 	, Speaker = require('speaker')
-	, colors = require('colors')
-	, ps = require('pause-stream')();
+	, colors = require('colors');
 
 
 app.use("/", express.static(__dirname + '/'))
@@ -41,16 +40,12 @@ getRandomTracks(NUMBER_OF_TRACKS, function(){
 function streamTrack(trackID) {
 
 	if (playing) {
-		speakersPipe.unpipe()
-		speakersPipe = (new lame.Decoder()).on('format', function (format) {
-			    this.pipe(new Speaker(format));
-			  })
+		speakersPipe.flush()
 	}
 
 	trackStreaming = request("http://api.soundcloud.com/tracks/" + trackID + "/stream?client_id=" + SOUNDCLOUD_CLIENT)
 	playing = true
-	ps.pipe(trackStreaming.pipe(speakersPipe))
-	ps.resume()
+	trackStreaming.pipe(speakersPipe)
 
 	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 		var track = tracks[i]
@@ -119,7 +114,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('pause', function() {
   	if (playing) {
   		// trackStreaming.pause()
-  		ps.pause()
+  		speakersPipe.pause()
   		playing = false
   	}
   })
