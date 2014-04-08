@@ -29,7 +29,9 @@ app.get('/', function(req, res){
   res.sendfile('views/index.html')
 })
 
-NUMBER_OF_TRACKS = 25
+io.set('log level', 1); // reduce logging
+
+var NUMBER_OF_TRACKS = 25
 
 console.log(("Retrieving data from RFID reader...").yellow)
 getRandomTracks(NUMBER_OF_TRACKS, function(){
@@ -53,7 +55,7 @@ function streamTrack(trackID) {
 	for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 		var track = tracks[i]
 		if (track.id == trackID) {
-			io.sockets.emit('nowPlaying', { "title": track.title, "artist": track.user.username, "trackID": track.id});
+			io.sockets.emit('nowPlaying', { "title": track.title, "artist": track.user.username, "trackID": track._.uniqueId([prefix])});
 			break;
 		}
 	}
