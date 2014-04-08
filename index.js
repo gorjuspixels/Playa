@@ -126,7 +126,7 @@ io.sockets.on('connection', function (socket) {
   		for(var i=0; i<NUMBER_OF_TRACKS; i++) {
 				var track = tracks[i]
 				if (track.id == currentID) {
-					sockets.emit('paused', { "title": track.title, "artist": track.user.username});
+					socket.emit('paused', { "title": track.title, "artist": track.user.username});
 					break;
 				}
 			}
