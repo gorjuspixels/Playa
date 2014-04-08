@@ -118,32 +118,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('streamTrack', function(trackID) {
   	streamTrack(trackID)
   })
-
-
-  socket.on('pause', function() {
-  	if (playing) {
-  		speakersPipe.unpipe()
-  		playing = false
-
-  		for(var i=0; i<NUMBER_OF_TRACKS; i++) {
-				var track = tracks[i]
-				if (track.id == currentID) {
-					socket.emit('paused', { "title": track.title, "artist": track.user.username});
-					break;
-				}
-			}
-  	}
-  })
-
-  socket.on('resume', function() {
-  	if (!playing) {
-  		// trackStreaming.pause()
-  		speakersPipe = lame.on('format', function (format) {
-			    this.pipe(new Speaker(format));
-			  })
-  		playing = false
-  	}
-  })
 })
 
 function userJoined(uName) {

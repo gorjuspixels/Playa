@@ -50,17 +50,6 @@ socket.on('nowPlaying', function(track) {
 	$('a.list-group-item[data-track-id="' + currentTrackID +'"]').addClass('active')
 })
 
-socket.on('paused', function(track) {
-	$('#play').empty()
-	$('#play').append('<i class="glyphicon glyphicon-play">Play</i>')
-
-	var p = "<p>" + track.title + " by " + track.artist + " was paused.</p>"
-	$("#msgScreen").append(p)
-  $('#msgScreen').stop().animate({
-	  scrollTop: $("#msgScreen")[0].scrollHeight
-	}, 800);
-})
-
 socket.on('error', function(error) {
 	if (error.userNameInUse) {
 		var p = "<p> Sorry that nickname is already taken!</p>"
@@ -107,16 +96,8 @@ function getSCURI(url, callback) {
 
 }
 
-function pause(){
-	socket.emit('pause')
-}
-
 function play(trackID){
 	socket.emit('streamTrack', trackID)
-}
-
-function resume() {
-	socket.emit('resume')
 }
 
 $(document).ready(function() {
@@ -124,20 +105,6 @@ $(document).ready(function() {
 	$(document).on('click', '#trackList a', function() {
 		play($(this).data('track-id'))
 		playing = true
-	})
-
-
-	$('#play').click(function() {
-		if(playing){
-			pause()
-			playing = false
-
-		}else{
-			if (currentTrackID == 0) 
-				currentTrackID = $('#trackList a').data('track-id')
-			resume()
-			playing = true
-		}
 	})
 })
 
